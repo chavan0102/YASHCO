@@ -341,7 +341,7 @@ function HomeView() {
         <img src={settings.heroImage} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"/>
         <div className="relative z-10 h-full flex flex-col items-center justify-end pb-24 text-center px-6 slow-fade">
-          <div className="text-white/80 text-[11px] tracking-luxe uppercase mb-6">Season 01 — Nocturne</div>
+          <div className="text-white/80 text-[11px] tracking-luxe uppercase mb-6">{settings.heroEyebrow || 'Season 01 — Nocturne'}</div>
           <h1 className="font-serif text-white text-6xl md:text-8xl lg:text-9xl leading-[0.95] font-light">{settings.heroTitle}</h1>
           <p className="text-white/85 mt-6 max-w-xl text-sm md:text-base">{settings.heroSubtitle}</p>
           <Button onClick={()=>navigate('shop')} className="mt-10 rounded-none bg-white text-black hover:bg-white/90 h-12 px-10 tracking-editorial uppercase text-xs">{settings.heroCtaLabel || 'Discover the Collection'}</Button>
@@ -351,8 +351,8 @@ function HomeView() {
       {/* Collections */}
       <section className="max-w-[1400px] mx-auto px-4 md:px-8 py-24 md:py-32">
         <div className="text-center mb-16">
-          <div className="text-[11px] tracking-luxe uppercase text-accent mb-4">Curated Collections</div>
-          <h2 className="font-serif text-4xl md:text-5xl">A house, quietly assembled.</h2>
+          <div className="text-[11px] tracking-luxe uppercase text-accent mb-4">{settings.collectionsEyebrow || 'Curated Collections'}</div>
+          <h2 className="font-serif text-4xl md:text-5xl">{settings.collectionsTitle || 'A house, quietly assembled.'}</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6 md:gap-10">
           {collections.map(c => (
@@ -375,10 +375,10 @@ function HomeView() {
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="flex items-end justify-between mb-12">
             <div>
-              <div className="text-[11px] tracking-luxe uppercase text-accent mb-3">The Edit</div>
-              <h2 className="font-serif text-4xl md:text-5xl">Signature Pieces</h2>
+              <div className="text-[11px] tracking-luxe uppercase text-accent mb-3">{settings.featuredEyebrow || 'The Edit'}</div>
+              <h2 className="font-serif text-4xl md:text-5xl">{settings.featuredTitle || 'Signature Pieces'}</h2>
             </div>
-            <button onClick={()=>navigate('shop')} className="text-[11px] tracking-editorial uppercase hover:text-accent">View All →</button>
+            <button onClick={()=>navigate('shop')} className="text-[11px] tracking-editorial uppercase hover:text-accent">{settings.featuredCtaLabel || 'View All →'}</button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {featured.map(p => <ProductCard key={p.id} p={p}/>)}
@@ -404,7 +404,7 @@ function HomeView() {
       {/* About */}
       <section className="bg-primary text-primary-foreground py-24 md:py-32">
         <div className="max-w-3xl mx-auto text-center px-6">
-          <div className="text-[11px] tracking-luxe uppercase text-accent mb-6">Maison</div>
+          <div className="text-[11px] tracking-luxe uppercase text-accent mb-6">{settings.aboutEyebrow || 'Maison'}</div>
           <h2 className="font-serif text-4xl md:text-5xl mb-8">{settings.aboutTitle}</h2>
           <div className="divider-gold mx-auto w-32 mb-8"/>
           <p className="text-primary-foreground/80 leading-relaxed">{settings.aboutBody}</p>
@@ -414,9 +414,9 @@ function HomeView() {
       {/* Concierge CTA */}
       <section className="py-24 max-w-3xl mx-auto text-center px-6">
         <div className="text-[11px] tracking-luxe uppercase text-accent mb-4">{settings.concierge?.title || 'Concierge'}</div>
-        <h2 className="font-serif text-4xl md:text-5xl mb-4">Bespoke, on request.</h2>
+        <h2 className="font-serif text-4xl md:text-5xl mb-4">{settings.conciergeCtaTitle || 'Bespoke, on request.'}</h2>
         <p className="text-muted-foreground mb-8">{settings.concierge?.subtitle}</p>
-        <Button onClick={()=>navigate('concierge')} variant="outline" className="rounded-none border-primary tracking-editorial uppercase text-xs h-12 px-10">Request a Consultation</Button>
+        <Button onClick={()=>navigate('concierge')} variant="outline" className="rounded-none border-primary tracking-editorial uppercase text-xs h-12 px-10">{settings.conciergeCtaLabel || 'Request a Consultation'}</Button>
       </section>
     </div>
   )
@@ -943,17 +943,17 @@ function ConciergeView() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-24">
       <div className="text-center mb-12">
-        <div className="text-[11px] tracking-luxe uppercase text-accent mb-4">Private Concierge</div>
+        <div className="text-[11px] tracking-luxe uppercase text-accent mb-4">{settings.concierge?.eyebrow || 'Private Concierge'}</div>
         <h1 className="font-serif text-5xl">{settings.concierge?.title || 'Concierge'}</h1>
         <p className="text-muted-foreground mt-4">{settings.concierge?.subtitle}</p>
       </div>
       <div className="grid md:grid-cols-2 gap-8 mb-12 text-sm">
         <div className="border border-border p-6">
-          <div className="text-[11px] tracking-editorial uppercase text-muted-foreground mb-2">Write to us</div>
+          <div className="text-[11px] tracking-editorial uppercase text-muted-foreground mb-2">{settings.concierge?.emailLabel || 'Write to us'}</div>
           <div>{settings.concierge?.email}</div>
         </div>
         <div className="border border-border p-6">
-          <div className="text-[11px] tracking-editorial uppercase text-muted-foreground mb-2">By Telephone</div>
+          <div className="text-[11px] tracking-editorial uppercase text-muted-foreground mb-2">{settings.concierge?.phoneLabel || 'By Telephone'}</div>
           <div>{settings.concierge?.phone}</div>
         </div>
       </div>
@@ -1426,6 +1426,10 @@ function AdminSettings() {
   }
   const setField = (k,v) => setForm(f=>({...f,[k]:v}))
   const setConcierge = (k,v) => setForm(f=>({...f, concierge: { ...(f.concierge||{}), [k]: v }}))
+  const lookbook = form?.lookbookImages || []
+  const setLookbookAt = (i,v) => setForm(f=>{ const a=[...(f.lookbookImages||[])]; a[i]=v; return {...f, lookbookImages:a} })
+  const addLookbook = () => setForm(f=>({...f, lookbookImages:[...(f.lookbookImages||[]), '']}))
+  const removeLookbook = (i) => setForm(f=>({...f, lookbookImages:(f.lookbookImages||[]).filter((_,x)=>x!==i)}))
   if (!form) return null
   return (
     <div className="max-w-3xl space-y-6">
@@ -1438,13 +1442,26 @@ function AdminSettings() {
       </div>
       <div className="space-y-3 border-t border-border pt-6">
         <h4 className="font-serif text-xl">Hero</h4>
+        <Label>Hero Eyebrow</Label><Input className="rounded-none" value={form.heroEyebrow||''} onChange={e=>setField('heroEyebrow',e.target.value)}/>
         <Label>Hero Title</Label><Input className="rounded-none" value={form.heroTitle} onChange={e=>setField('heroTitle',e.target.value)}/>
         <Label>Hero Subtitle</Label><Textarea className="rounded-none" value={form.heroSubtitle} onChange={e=>setField('heroSubtitle',e.target.value)}/>
         <Label>Hero Image URL</Label><Input className="rounded-none" value={form.heroImage} onChange={e=>setField('heroImage',e.target.value)}/>
         <Label>Hero CTA Label</Label><Input className="rounded-none" value={form.heroCtaLabel||''} onChange={e=>setField('heroCtaLabel',e.target.value)}/>
       </div>
       <div className="space-y-3 border-t border-border pt-6">
+        <h4 className="font-serif text-xl">Collections Section</h4>
+        <Label>Collections Eyebrow</Label><Input className="rounded-none" value={form.collectionsEyebrow||''} onChange={e=>setField('collectionsEyebrow',e.target.value)}/>
+        <Label>Collections Heading</Label><Input className="rounded-none" value={form.collectionsTitle||''} onChange={e=>setField('collectionsTitle',e.target.value)}/>
+      </div>
+      <div className="space-y-3 border-t border-border pt-6">
+        <h4 className="font-serif text-xl">Featured Section</h4>
+        <Label>Featured Eyebrow</Label><Input className="rounded-none" value={form.featuredEyebrow||''} onChange={e=>setField('featuredEyebrow',e.target.value)}/>
+        <Label>Featured Heading</Label><Input className="rounded-none" value={form.featuredTitle||''} onChange={e=>setField('featuredTitle',e.target.value)}/>
+        <Label>Featured Link Label</Label><Input className="rounded-none" value={form.featuredCtaLabel||''} onChange={e=>setField('featuredCtaLabel',e.target.value)}/>
+      </div>
+      <div className="space-y-3 border-t border-border pt-6">
         <h4 className="font-serif text-xl">About</h4>
+        <Label>About Eyebrow</Label><Input className="rounded-none" value={form.aboutEyebrow||''} onChange={e=>setField('aboutEyebrow',e.target.value)}/>
         <Label>About Title</Label><Input className="rounded-none" value={form.aboutTitle} onChange={e=>setField('aboutTitle',e.target.value)}/>
         <Label>About Body</Label><Textarea rows={5} className="rounded-none" value={form.aboutBody} onChange={e=>setField('aboutBody',e.target.value)}/>
       </div>
@@ -1452,14 +1469,29 @@ function AdminSettings() {
         <h4 className="font-serif text-xl">Lookbook</h4>
         <Label>Lookbook Title</Label><Input className="rounded-none" value={form.lookbookTitle} onChange={e=>setField('lookbookTitle',e.target.value)}/>
         <Label>Lookbook Subtitle</Label><Input className="rounded-none" value={form.lookbookSubtitle} onChange={e=>setField('lookbookSubtitle',e.target.value)}/>
-        <Label>Lookbook Images (one per line)</Label>
-        <Textarea rows={4} className="rounded-none" value={(form.lookbookImages||[]).join('\n')} onChange={e=>setField('lookbookImages', e.target.value.split('\n').filter(Boolean))}/>
+        <Label>Home Page Images</Label>
+        <div className="space-y-2">
+          {lookbook.map((img,i)=>(
+            <div key={i} className="flex gap-2 items-center">
+              {img ? <img src={img} alt="" className="w-12 h-16 object-cover border border-border"/> : <div className="w-12 h-16 bg-muted border border-border"/>}
+              <Input className="rounded-none" placeholder="Image URL" value={img} onChange={e=>setLookbookAt(i,e.target.value)}/>
+              <Button variant="outline" size="sm" className="rounded-none" onClick={()=>removeLookbook(i)}><Trash2 className="w-3.5 h-3.5"/></Button>
+            </div>
+          ))}
+          {lookbook.length === 0 && <div className="text-xs text-muted-foreground">No images yet.</div>}
+          <Button variant="outline" size="sm" className="rounded-none" onClick={addLookbook}><Plus className="w-3.5 h-3.5 mr-2"/>Add Image</Button>
+        </div>
       </div>
       <div className="space-y-3 border-t border-border pt-6">
-        <h4 className="font-serif text-xl">Concierge</h4>
+        <h4 className="font-serif text-xl">Concierge Section (Home) & Page</h4>
+        <Label>Home CTA Heading</Label><Input className="rounded-none" value={form.conciergeCtaTitle||''} onChange={e=>setField('conciergeCtaTitle',e.target.value)}/>
+        <Label>Home CTA Button Label</Label><Input className="rounded-none" value={form.conciergeCtaLabel||''} onChange={e=>setField('conciergeCtaLabel',e.target.value)}/>
+        <Label>Concierge Eyebrow</Label><Input className="rounded-none" value={form.concierge?.eyebrow||''} onChange={e=>setConcierge('eyebrow',e.target.value)}/>
         <Label>Title</Label><Input className="rounded-none" value={form.concierge?.title||''} onChange={e=>setConcierge('title',e.target.value)}/>
         <Label>Subtitle</Label><Textarea className="rounded-none" value={form.concierge?.subtitle||''} onChange={e=>setConcierge('subtitle',e.target.value)}/>
+        <Label>Email Label</Label><Input className="rounded-none" value={form.concierge?.emailLabel||''} onChange={e=>setConcierge('emailLabel',e.target.value)}/>
         <Label>Email</Label><Input className="rounded-none" value={form.concierge?.email||''} onChange={e=>setConcierge('email',e.target.value)}/>
+        <Label>Phone Label</Label><Input className="rounded-none" value={form.concierge?.phoneLabel||''} onChange={e=>setConcierge('phoneLabel',e.target.value)}/>
         <Label>Phone</Label><Input className="rounded-none" value={form.concierge?.phone||''} onChange={e=>setConcierge('phone',e.target.value)}/>
       </div>
       <div className="space-y-3 border-t border-border pt-6">
