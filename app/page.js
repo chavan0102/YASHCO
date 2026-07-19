@@ -235,11 +235,11 @@ function Header() {
         <div className="flex items-center gap-6 flex-1">
           <button className="md:hidden" onClick={() => setMenuOpen(true)}><Menu className={cx('w-5 h-5', transparent && 'text-white')}/></button>
           <nav className={cx('hidden md:flex items-center gap-8 text-[11px] tracking-editorial uppercase', transparent && 'text-white')}>
-            <button onClick={() => navigate('shop')} className="hover:text-accent transition-colors">Shop</button>
-            <button onClick={() => navigate('shop', { collection: 'womenswear' })} className="hover:text-accent transition-colors">Women</button>
-            <button onClick={() => navigate('shop', { collection: 'menswear' })} className="hover:text-accent transition-colors">Men</button>
-            <button onClick={() => navigate('shop', { collection: 'accessories' })} className="hover:text-accent transition-colors">Accessories</button>
-            <button onClick={() => navigate('concierge')} className="hover:text-accent transition-colors">Concierge</button>
+            <button onClick={() => navigate('shop')} className="hover:text-accent transition-colors">{settings.nav?.shop || 'Shop'}</button>
+            <button onClick={() => navigate('shop', { collection: 'womenswear' })} className="hover:text-accent transition-colors">{settings.nav?.women || 'Women'}</button>
+            <button onClick={() => navigate('shop', { collection: 'menswear' })} className="hover:text-accent transition-colors">{settings.nav?.men || 'Men'}</button>
+            <button onClick={() => navigate('shop', { collection: 'accessories' })} className="hover:text-accent transition-colors">{settings.nav?.accessories || 'Accessories'}</button>
+            <button onClick={() => navigate('concierge')} className="hover:text-accent transition-colors">{settings.nav?.concierge || 'Concierge'}</button>
           </nav>
         </div>
         <button onClick={() => navigate('home')} className="flex items-center justify-center">
@@ -262,16 +262,17 @@ function Header() {
 }
 
 function MobileMenu() {
-  const { menuOpen, setMenuOpen, navigate, user } = useApp()
+  const { menuOpen, setMenuOpen, navigate, user, settings } = useApp()
   return (
     <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
       <SheetContent side="left" className="w-[85vw] sm:w-[380px] bg-background">
         <SheetHeader><SheetTitle className="font-serif text-2xl">Menu</SheetTitle></SheetHeader>
         <div className="mt-8 flex flex-col gap-5 text-sm tracking-editorial uppercase">
-          {['shop','womenswear','menswear','accessories'].map((c,i)=>(
-            <button key={c} onClick={()=>navigate('shop', c==='shop'?{}:{collection:c})} className="text-left border-b border-border pb-3">{c==='shop'?'All':c}</button>
-          ))}
-          <button onClick={()=>navigate('concierge')} className="text-left border-b border-border pb-3">Concierge</button>
+          <button onClick={()=>navigate('shop')} className="text-left border-b border-border pb-3">{settings.nav?.shop || 'Shop'}</button>
+          <button onClick={()=>navigate('shop',{collection:'womenswear'})} className="text-left border-b border-border pb-3">{settings.nav?.women || 'Women'}</button>
+          <button onClick={()=>navigate('shop',{collection:'menswear'})} className="text-left border-b border-border pb-3">{settings.nav?.men || 'Men'}</button>
+          <button onClick={()=>navigate('shop',{collection:'accessories'})} className="text-left border-b border-border pb-3">{settings.nav?.accessories || 'Accessories'}</button>
+          <button onClick={()=>navigate('concierge')} className="text-left border-b border-border pb-3">{settings.nav?.concierge || 'Concierge'}</button>
           <button onClick={()=>navigate(user? (user.role==='admin'?'admin':'dashboard'):'login')} className="text-left border-b border-border pb-3">{user?'Account':'Sign In'}</button>
         </div>
       </SheetContent>
@@ -362,7 +363,7 @@ function HomeView() {
               </div>
               <div className="mt-5 flex items-baseline justify-between">
                 <h3 className="font-serif text-2xl">{c.name}</h3>
-                <span className="text-[11px] tracking-editorial uppercase group-hover:text-accent transition-colors">Explore →</span>
+                <span className="text-[11px] tracking-editorial uppercase group-hover:text-accent transition-colors">{settings.collectionsExploreLabel || 'Explore →'}</span>
               </div>
               <p className="text-sm text-muted-foreground mt-1">{c.description}</p>
             </button>
@@ -453,7 +454,7 @@ function ProductCard({ p }) {
 
 // ---------- Shop ----------
 function ShopView() {
-  const { api, view, collections, allProducts } = useApp()
+  const { api, view, collections, allProducts, settings } = useApp()
   const [products, setProducts] = useState([])
   const [filters, setFilters] = useState({ collection: view.params.collection || '', size: '', color: '', minPrice: '', maxPrice: '', search: '', sort: '' })
   const [loading, setLoading] = useState(true)
@@ -475,8 +476,8 @@ function ShopView() {
   return (
     <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-12 md:py-20">
       <div className="text-center mb-12 fade-in">
-        <div className="text-[11px] tracking-luxe uppercase text-accent mb-4">The Boutique</div>
-        <h1 className="font-serif text-5xl md:text-6xl">{filters.collection ? collections.find(c=>c.slug===filters.collection)?.name || 'Shop' : 'Shop All'}</h1>
+        <div className="text-[11px] tracking-luxe uppercase text-accent mb-4">{settings.shopEyebrow || 'The Boutique'}</div>
+        <h1 className="font-serif text-5xl md:text-6xl">{filters.collection ? collections.find(c=>c.slug===filters.collection)?.name || 'Shop' : (settings.shopAllTitle || 'Shop All')}</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8 md:gap-12">
         <aside className="space-y-8">
@@ -1426,6 +1427,8 @@ function AdminSettings() {
   }
   const setField = (k,v) => setForm(f=>({...f,[k]:v}))
   const setConcierge = (k,v) => setForm(f=>({...f, concierge: { ...(f.concierge||{}), [k]: v }}))
+  const setNav = (k,v) => setForm(f=>({...f, nav: { ...(f.nav||{}), [k]: v }}))
+  const setFooter = (k,v) => setForm(f=>({...f, footer: { ...(f.footer||{}), [k]: v }}))
   const lookbook = form?.lookbookImages || []
   const setLookbookAt = (i,v) => setForm(f=>{ const a=[...(f.lookbookImages||[])]; a[i]=v; return {...f, lookbookImages:a} })
   const addLookbook = () => setForm(f=>({...f, lookbookImages:[...(f.lookbookImages||[]), '']}))
@@ -1441,6 +1444,19 @@ function AdminSettings() {
         <Label>Announcement Bar</Label><Input className="rounded-none" value={form.announcement||''} onChange={e=>setField('announcement',e.target.value)}/>
       </div>
       <div className="space-y-3 border-t border-border pt-6">
+        <h4 className="font-serif text-xl">Navigation Bar (top-left)</h4>
+        <Label>Shop Link</Label><Input className="rounded-none" value={form.nav?.shop||''} onChange={e=>setNav('shop',e.target.value)}/>
+        <Label>Women Link</Label><Input className="rounded-none" value={form.nav?.women||''} onChange={e=>setNav('women',e.target.value)}/>
+        <Label>Men Link</Label><Input className="rounded-none" value={form.nav?.men||''} onChange={e=>setNav('men',e.target.value)}/>
+        <Label>Accessories Link</Label><Input className="rounded-none" value={form.nav?.accessories||''} onChange={e=>setNav('accessories',e.target.value)}/>
+        <Label>Concierge Link</Label><Input className="rounded-none" value={form.nav?.concierge||''} onChange={e=>setNav('concierge',e.target.value)}/>
+      </div>
+      <div className="space-y-3 border-t border-border pt-6">
+        <h4 className="font-serif text-xl">Shop / Boutique Page</h4>
+        <Label>Boutique Eyebrow</Label><Input className="rounded-none" value={form.shopEyebrow||''} onChange={e=>setField('shopEyebrow',e.target.value)}/>
+        <Label>Shop All Title</Label><Input className="rounded-none" value={form.shopAllTitle||''} onChange={e=>setField('shopAllTitle',e.target.value)}/>
+      </div>
+      <div className="space-y-3 border-t border-border pt-6">
         <h4 className="font-serif text-xl">Hero</h4>
         <Label>Hero Eyebrow</Label><Input className="rounded-none" value={form.heroEyebrow||''} onChange={e=>setField('heroEyebrow',e.target.value)}/>
         <Label>Hero Title</Label><Input className="rounded-none" value={form.heroTitle} onChange={e=>setField('heroTitle',e.target.value)}/>
@@ -1452,6 +1468,7 @@ function AdminSettings() {
         <h4 className="font-serif text-xl">Collections Section</h4>
         <Label>Collections Eyebrow</Label><Input className="rounded-none" value={form.collectionsEyebrow||''} onChange={e=>setField('collectionsEyebrow',e.target.value)}/>
         <Label>Collections Heading</Label><Input className="rounded-none" value={form.collectionsTitle||''} onChange={e=>setField('collectionsTitle',e.target.value)}/>
+        <Label>Explore Link Label</Label><Input className="rounded-none" value={form.collectionsExploreLabel||''} onChange={e=>setField('collectionsExploreLabel',e.target.value)}/>
       </div>
       <div className="space-y-3 border-t border-border pt-6">
         <h4 className="font-serif text-xl">Featured Section</h4>
@@ -1496,6 +1513,9 @@ function AdminSettings() {
       </div>
       <div className="space-y-3 border-t border-border pt-6">
         <h4 className="font-serif text-xl">Footer</h4>
+        <Label>Boutique Column Heading</Label><Input className="rounded-none" value={form.footer?.boutiqueHeading||''} onChange={e=>setFooter('boutiqueHeading',e.target.value)}/>
+        <Label>Maison Column Heading</Label><Input className="rounded-none" value={form.footer?.maisonHeading||''} onChange={e=>setFooter('maisonHeading',e.target.value)}/>
+        <Label>Contact Column Heading</Label><Input className="rounded-none" value={form.footer?.contactHeading||''} onChange={e=>setFooter('contactHeading',e.target.value)}/>
         <Label>Footer Copy</Label><Input className="rounded-none" value={form.footerCopy||''} onChange={e=>setField('footerCopy',e.target.value)}/>
       </div>
       <Button className="rounded-none tracking-editorial uppercase text-xs" onClick={save}>Save All Changes</Button>
@@ -1511,7 +1531,7 @@ function Footer() {
     <footer className="bg-primary text-primary-foreground py-16 mt-20">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid md:grid-cols-3 gap-10">
         <div>
-          <div className="text-[11px] tracking-editorial uppercase text-primary-foreground/60 mb-4">Boutique</div>
+          <div className="text-[11px] tracking-editorial uppercase text-primary-foreground/60 mb-4">{settings.footer?.boutiqueHeading || 'Boutique'}</div>
           <div className="space-y-2 text-sm">
             <button className="block" onClick={()=>navigate('shop')}>All Pieces</button>
             <button className="block" onClick={()=>navigate('shop',{collection:'womenswear'})}>Womenswear</button>
@@ -1520,14 +1540,14 @@ function Footer() {
           </div>
         </div>
         <div>
-          <div className="text-[11px] tracking-editorial uppercase text-primary-foreground/60 mb-4">Maison</div>
+          <div className="text-[11px] tracking-editorial uppercase text-primary-foreground/60 mb-4">{settings.footer?.maisonHeading || 'Maison'}</div>
           <div className="space-y-2 text-sm">
             <button className="block" onClick={()=>navigate('about')}>The House</button>
             <button className="block" onClick={()=>navigate('concierge')}>Concierge</button>
           </div>
         </div>
         <div>
-          <div className="text-[11px] tracking-editorial uppercase text-primary-foreground/60 mb-4">Contact</div>
+          <div className="text-[11px] tracking-editorial uppercase text-primary-foreground/60 mb-4">{settings.footer?.contactHeading || 'Contact'}</div>
           <div className="space-y-2 text-sm">
             <div>{settings.concierge?.email}</div>
             <div>{settings.concierge?.phone}</div>
